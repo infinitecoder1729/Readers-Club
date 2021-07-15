@@ -7,7 +7,9 @@ import datetime
 from PIL import ImageTk,Image
 from tkinter import messagebox
 import time
-
+runtime=datetime.datetime.now()
+logfile=open("Program Log.txt", "a+")
+logfile.write("\n\nDate and Time : {} - Application Accessed".format(runtime))
 def load_databases():
     print("Status : Connection Successful - Fetching Databases")
     host=h.get()
@@ -21,6 +23,8 @@ def load_databases():
         for i in cur:
             l=l+i
         Database['values']=l
+        runtime=datetime.datetime.now()
+        logfile.write("\n\nDate and Time : {} - Login Successful : Databases Fetched".format(runtime))
     except:
         messagebox.showinfo('Warning - Incorrect Login Info','Error !!! , You entered incorrect Credentials.')
         
@@ -52,16 +56,18 @@ def logintodb(host,user, passw,db_con):
         root.geometry("600x600")
         root.state('normal')
         cursor.execute('create table if not exists book_info(book_id varchar(5) primary key, book_title char(255), book_author varchar(255),book_status varchar(255) default "Available")')
-        cursor.execute('create table if not exists transaction_info(book_id varchar(5) , issued_to char(255) not null,date_issued varchar(255) not null,date_returned varchar(255) default "Not Returned")')
+        cursor.execute('create table if not exists transaction_info(book_id varchar(5) , issued_to char(255) not null,date_issued varchar(255) not null,date_returned varchar(255) default "Not Returned",fine integer(4) default 0)')
+        runtime=datetime.datetime.now()
+        logfile.write("\nDate and Time : {} - Database Selected : {}".format(runtime,db_con))
         try:
             cursor.execute('insert into book_info values("T9312","Wings of Fire","Dr.APJ Abdul Kalam","Available")')
             cursor.execute('insert into book_info values("Y9301","Godan","Munshi Premchand","Available")')
             cursor.execute('insert into book_info values("K4922","Algorithms","Robert Sedgewick","Issued")')
             cursor.execute('insert into book_info values("K1283","The Pricipia","Isaac Newton","Available")')
-            cursor.execute('insert into transaction_info values("K1283","Priya R.","2021-04-21","2021-05-02")')
-            cursor.execute('insert into transaction_info values("K4922","Abhay K.","2021-05-12","Not Returned")')
-            cursor.execute('insert into transaction_info values("T9312","Sahay M.","2021-03-11","2021-04-14")')        
-            cursor.execute('insert into transaction_info values("T9312","Abhay K.","2021-04-21","2021-06-12")')
+            cursor.execute('insert into transaction_info values("K1283","Priya R.","2021-04-02","2021-05-01",0)')
+            cursor.execute('insert into transaction_info values("K4922","Abhay K.","2021-05-12","Not Returned",0)')
+            cursor.execute('insert into transaction_info values("T9312","Sahay M.","2021-03-11","2021-04-14",0)')        
+            cursor.execute('insert into transaction_info values("T9312","Abhay K.","2021-04-21","2021-06-12",50)')
             db.commit()
             menu(host,user, passw,db_con)
         except:
@@ -70,6 +76,9 @@ def logintodb(host,user, passw,db_con):
             
 def menu(host,user, passw,db_con):
     print("Data initialization Successful. UI is working seamlessly. Menu Opened")
+    runtime=datetime.datetime.now()
+    logfile.write("\nDate and Time : {} - Application UI Initialized".format(runtime))
+    logfile.write("\nDate and Time : {} - Menu Displayed to the User".format(runtime))
     conn= mysql.connector.connect(host = host, user=user, passwd = passw, database =db_con)
     cur = conn.cursor()
     menu = tk.Toplevel()
@@ -111,6 +120,8 @@ def menu(host,user, passw,db_con):
     menu.mainloop()
 
 def addbookuicall(host,user, passw,db_con):
+    runtime=datetime.datetime.now()
+    logfile.write("\nDate and Time : {} - Add Book UI Initialized".format(runtime))
     def addbookdatafetch(host,user, passw,db_con):
         bookid = book_id.get()
         booktitle = book_title.get()
@@ -178,12 +189,18 @@ def addbook(host,user, passw,db_con,bookid,booktitle,bookauthor,bookstatus):
     try:
         cur.execute("insert into book_info(book_id , book_title , book_author ,book_status) values('{}','{}','{}','{}')".format(bookid,booktitle,bookauthor,bookstatus))
         con.commit()
+        runtime=datetime.datetime.now()
+        logfile.write("\nDate and Time : {} - Book Added to Database with details as : {} {} {} {}".format(runtime,bookid,booktitle,bookauthor,bookstatus))
         messagebox.showinfo('Successful Operation',"Book has been Added to the Database Successfully")
     except:
         messagebox.showinfo("Error !","Can't add book into the database\nReasons might include :\n1.Violation of Prescribed Formats\n2.Empty Fields\n3.Duplicate Book Ids")
-
+        runtime=datetime.datetime.now()
+        logfile.write("\nDate and Time : {} - Error in Adding the Book to the database".format(runtime))
+    
 def viewmenucall(host,user, passw,db_con):
     print('Information Fetched from database for structured display')
+    runtime=datetime.datetime.now()
+    logfile.write("\nDate and Time : {} - View Menu Accessed".format(runtime))
     conn= mysql.connector.connect(host = host, user=user, passwd = passw, database =db_con)
     cur = conn.cursor()
     viewmenu = tk.Toplevel()
@@ -227,6 +244,8 @@ def viewmenucall(host,user, passw,db_con):
     viewmenu.mainloop()
 
 def viewbooks(host,user, passw,db_con):
+    runtime=datetime.datetime.now()
+    logfile.write("\nDate and Time : {} - Displaying Information for All Books".format(runtime))
     print('Displaying Book Information')
     con= mysql.connector.connect(host = host, user=user, passwd = passw, database =db_con)
     cur = con.cursor()
@@ -281,6 +300,8 @@ def viewbooks(host,user, passw,db_con):
     viewbookui.mainloop()
 
 def viewstats(host,user, passw,db_con): 
+    runtime=datetime.datetime.now()
+    logfile.write("\nDate and Time : {} - Displaying Stats".format(runtime))
     print('Displaying Statistical Information')
     con= mysql.connector.connect(host = host, user=user, passwd = passw, database =db_con)
     cur = con.cursor()
@@ -327,6 +348,8 @@ def viewstats(host,user, passw,db_con):
     viewstatui.mainloop()
 
 def viewtrans(host,user, passw,db_con): 
+    runtime=datetime.datetime.now()
+    logfile.write("\nDate and Time : {} - Displaying Transactions".format(runtime)) 
     print('Displaying Transactional Information')
     con= mysql.connector.connect(host = host, user=user, passwd = passw, database =db_con)
     cur = con.cursor()
@@ -360,7 +383,7 @@ def viewtrans(host,user, passw,db_con):
     relydef = 0.12
     cur.execute('select * from transaction_info')
     for i in cur:
-        infoLabel=Label(infolabelFrame, text="Book Id : {0:^2} - Issued to : {1:^2} - Date of Issue: {2:^2} - Date of Return: {3:^2}".format(i[0],i[1],i[2],i[3]),bg='black',fg='pink',font=('Comic Sans Ms',10)).place(relx=0.01,rely=relydef)
+        infoLabel=Label(infolabelFrame, text="Book Id : {0:^2} - Issued to : {1:^2} - Date of Issue: {2:^2} - Date of Return: {3:^2} - Fine: {4:^2}".format(i[0],i[1],i[2],i[3],i[4]),bg='black',fg='pink',font=('Comic Sans Ms',10)).place(relx=0.01,rely=relydef)
         relydef=relydef+0.1
     cur.execute("select count(*) from transaction_info where date_returned='Not Returned' ")
     for i in cur:
@@ -419,14 +442,20 @@ def transbymem(host,user, passw,db_con):
     def transmemuidet(host,user, passw,db_con):
         detBtn.destroy()
         name=mem.get()
+        runtime=datetime.datetime.now()
+        logfile.write("\nDate and Time : {} - Displaying Details for the User : {}".format(runtime,name))
         con= mysql.connector.connect(host = host, user=user, passwd = passw, database =db_con)
         cur = con.cursor()
         cur.execute('select * from transaction_info where issued_to = "{}"'.format(name))
         relydef=0.15
         for i in cur:
-            lb1=Label(lblFrame, text="Book Id : {0:^2} - Date of Issue : {1:^2} - Date of Return : {2:^2}".format(i[0],i[2],i[3]),bg='black',fg='pink',font=('Comic Sans Ms',12))
+            lb1=Label(lblFrame, text="Book Id : {0:^2} - Date of Issue : {1:^2} - Date of Return : {2:^2} - Fine : {3:^2}".format(i[0],i[2],i[3],i[4]),bg='black',fg='pink',font=('Comic Sans Ms',10))
             lb1.place(relx=0,rely=relydef)
             relydef=relydef+0.1
+        cur.execute('select sum(fine) from transaction_info where issued_to = "{}" '.format(name))
+        for i in cur:
+            lb1=Label(lblFrame, text="Total fine paid : {}".format(i[0]),bg='black',fg='pink',font=('Comic Sans Ms',12))
+            lb1.place(relx=0,rely=relydef)
     detBtn = Button(lblFrame,text="View Details",bg='Dark Green', fg='white', command=lambda : transmemuidet(host,user, passw,db_con), font=('Comic Sans Ms',12))
     detBtn.place(relx=0.72,rely=0, relwidth=0.24)
     quitBtn = Button(transmemui,text="Back",bg='red', fg='white', command=transmemui.destroy, font=('Comic Sans Ms',12))
@@ -479,6 +508,8 @@ def infobybook(host,user, passw,db_con):
     def infobybookuidet(host,user, passw,db_con):
         detBtn.destroy()
         bookid=idb.get()
+        runtime=datetime.datetime.now()
+        logfile.write("\nDate and Time : {} - Displaying Information for Book {}".format(runtime,bookid))
         con= mysql.connector.connect(host = host, user=user, passwd = passw, database =db_con)
         cur = con.cursor()
         cur.execute('select * from book_info where book_id = "{}"'.format(bookid))
@@ -506,6 +537,8 @@ def infobybook(host,user, passw,db_con):
 
 
 def issuebookcall(host,user, passw,db_con):
+    runtime=datetime.datetime.now()
+    logfile.write("\nDate and Time : {} - Issue Book Window Opened".format(runtime)) 
     con= mysql.connector.connect(host = host, user=user, passwd = passw, database =db_con)
     cur = con.cursor()
     issuebookui=tk.Toplevel()
@@ -563,6 +596,8 @@ def issuebookcall(host,user, passw,db_con):
     issuebookui.mainloop()
 
 def issuebook(host,user, passw,db_con,bookid,issued_to):
+    runtime=datetime.datetime.now()
+    logfile.write("\nDate and Time : {} - Issuing Book {} to {} ".format(runtime,bookid,issued_to))
     print('Issuing Book {} to {} '.format(bookid,issued_to))
     datetimeinput=datetime.date.today()
     con= mysql.connector.connect(host = host, user=user, passwd = passw, database =db_con)
@@ -574,6 +609,8 @@ def issuebook(host,user, passw,db_con,bookid,issued_to):
     messagebox.showinfo('Operation Successful',"Book Status Changed to 'Issued' Successfully")
 
 def delbookcall(host,user, passw,db_con):    
+    runtime=datetime.datetime.now()
+    logfile.write("\nDate and Time : {} - Delete Book Window Opened".format(runtime))    
     delbookui = tk.Toplevel()
     delbookui.title("Reader's Club - Delete Book Information from the Database")
     delbookui.minsize(width=400,height=400)
@@ -625,6 +662,8 @@ def delbookcall(host,user, passw,db_con):
 
 def delbook(host,user, passw,db_con,bookid):
     print('Deleting Book {} from the database'.format(bookid))
+    runtime=datetime.datetime.now()
+    logfile.write("\nDate and Time : {} - Deleting Book {} from the database ".format(runtime,bookid))
     con= mysql.connector.connect(host = host, user=user, passwd = passw, database =db_con)
     cur = con.cursor()
     cur.execute("delete from book_info where book_id='{}'".format(bookid))
@@ -635,6 +674,8 @@ def delbook(host,user, passw,db_con,bookid):
     messagebox.showinfo('Success',"Book Information has benn Deleted Successfully and all the Transaction Records have been updated to Not Available (NA) ")  
 
 def retbookcall(host,user, passw,db_con):     
+    runtime=datetime.datetime.now()
+    logfile.write("\nDate and Time : {} - Return Book Window Accessed".format(runtime))
     retbookui = tk.Toplevel()
     retbookui.title("Reader's Club - Record a Return")
     retbookui.state=("zoomed")
@@ -685,16 +726,38 @@ def retbookcall(host,user, passw,db_con):
     retbookui.mainloop()
 
 def retbook(host,user, passw,db_con,bookid):
+    runtime=datetime.datetime.now()
+    logfile.write("\nDate and Time : {} - Book {} Returned ".format(runtime,bookid))
     print('Recording a Return')
     con= mysql.connector.connect(host = host, user=user, passwd = passw, database =db_con)
     cur = con.cursor()
     datetimeinput=datetime.date.today()
+    cur.execute("select date_issued from transaction_info where book_id='{}' and date_returned='Not Returned' ".format(bookid))
+    for i in cur:
+        a=i[0]
+        a=datetime.datetime.strptime(a, '%Y-%m-%d').date()
+        daysdiff=(datetimeinput-a).days
+        if daysdiff > 30:
+            mon=daysdiff%30
+            fine=mon*50
+            cur.execute("select issued_to from transaction_info where book_id='{}' and date_returned='Not Returned' ".format(bookid))
+            for a in cur:
+                violator=a[0]
+            cur.execute("update transaction_info set fine={} where book_id='{}' and date_returned='Not Returned' ".format(fine,bookid))
+            finefile=open("Fine History.txt", "a+")
+            finefile.write("\nName of Violator : {} Book Id : {} Days Kept : {} Fine : {} Payment Id : By Cash".format(violator,bookid,daysdiff,fine))
+            runtime=datetime.datetime.now()
+            logfile.write("\n\nDate and Time : {} - Fine Imposed on {} for Late Return".format(runtime,violator))
+            messagebox.showinfo('Fine to be Paid',"Fine of Rs. {} is to be paid for the violation of Return Rules. The Challan Document has been saved to your folder.".format(fine))
+        else :
+            fine=0  
+    cur.execute("update transaction_info set fine={} where book_id='{}' and date_returned='Not Returned' ".format(fine,bookid))
     cur.execute("update transaction_info set date_returned='{}' where book_id='{}' and date_returned='Not Returned' ".format(datetimeinput,bookid))
     con.commit()
     cur.execute("update book_info set book_status='Available' where book_id='{}'".format(bookid))
     con.commit()
     messagebox.showinfo('Success',"Book Status has benn Updated Successfully and the Transaction Record have been updated with Return Date ")
-                        
+           
 def connect():
     host=h.get()
     user = Username.get()
