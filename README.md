@@ -1,5 +1,5 @@
 # Readers Club
-It is an UI Application using Python-MySql Connectivity to provide the user a seamless way of viewing, modifying, and managing a Database such as that of a Reader's Club.
+It is an UI Application using Python-MySql Connectivity and File Handling concepts to provide the user a seamless way of viewing, modifying, and managing a Database such as that of a Reader's Club. The Application also Issues Fines for the Users of Reader's Club as well as maintain a Usage log with timestamps
 The important part is that this application has a wide field of application and can be used at a lot of places for the purpose of organizing data.
 It has extensive options for structured view of information while providing a secured interface (via a Login Page) for the user.
 
