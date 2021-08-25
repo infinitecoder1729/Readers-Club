@@ -10,6 +10,7 @@ import time
 runtime=datetime.datetime.now()
 logfile=open("Program Log.txt", "a+")
 logfile.write("\n\nDate and Time : {} - Application Accessed".format(runtime))
+logfile.close()
 def load_databases():
     print("Status : Connection Successful - Fetching Databases")
     host=h.get()
@@ -24,7 +25,9 @@ def load_databases():
             l=l+i
         Database['values']=l
         runtime=datetime.datetime.now()
+        logfile=open("Program Log.txt", "a+")
         logfile.write("\n\nDate and Time : {} - Login Successful : Databases Fetched".format(runtime))
+        logfile.close()
     except:
         messagebox.showinfo('Warning - Incorrect Login Info','Error !!! , You entered incorrect Credentials.')
         
@@ -58,7 +61,9 @@ def logintodb(host,user, passw,db_con):
         cursor.execute('create table if not exists book_info(book_id varchar(5) primary key, book_title char(255), book_author varchar(255),book_status varchar(255) default "Available")')
         cursor.execute('create table if not exists transaction_info(book_id varchar(5) , issued_to char(255) not null,date_issued varchar(255) not null,date_returned varchar(255) default "Not Returned",fine integer(4) default 0)')
         runtime=datetime.datetime.now()
+        logfile=open("Program Log.txt", "a+")
         logfile.write("\nDate and Time : {} - Database Selected : {}".format(runtime,db_con))
+        logfile.close()
         try:
             cursor.execute('insert into book_info values("T9312","Wings of Fire","Dr.APJ Abdul Kalam","Available")')
             cursor.execute('insert into book_info values("Y9301","Godan","Munshi Premchand","Available")')
@@ -77,8 +82,10 @@ def logintodb(host,user, passw,db_con):
 def menu(host,user, passw,db_con):
     print("Data initialization Successful. UI is working seamlessly. Menu Opened")
     runtime=datetime.datetime.now()
+    logfile=open("Program Log.txt", "a+")
     logfile.write("\nDate and Time : {} - Application UI Initialized".format(runtime))
     logfile.write("\nDate and Time : {} - Menu Displayed to the User".format(runtime))
+    logfile.close()
     conn= mysql.connector.connect(host = host, user=user, passwd = passw, database =db_con)
     cur = conn.cursor()
     menu = tk.Toplevel()
@@ -121,7 +128,9 @@ def menu(host,user, passw,db_con):
 
 def addbookuicall(host,user, passw,db_con):
     runtime=datetime.datetime.now()
+    logfile=open("Program Log.txt", "a+")
     logfile.write("\nDate and Time : {} - Add Book UI Initialized".format(runtime))
+    logfile.close()
     def addbookdatafetch(host,user, passw,db_con):
         bookid = book_id.get()
         booktitle = book_title.get()
@@ -189,18 +198,24 @@ def addbook(host,user, passw,db_con,bookid,booktitle,bookauthor,bookstatus):
     try:
         cur.execute("insert into book_info(book_id , book_title , book_author ,book_status) values('{}','{}','{}','{}')".format(bookid,booktitle,bookauthor,bookstatus))
         con.commit()
+        logfile=open("Program Log.txt", "a+")
         runtime=datetime.datetime.now()
         logfile.write("\nDate and Time : {} - Book Added to Database with details as : {} {} {} {}".format(runtime,bookid,booktitle,bookauthor,bookstatus))
+        logfile.close()
         messagebox.showinfo('Successful Operation',"Book has been Added to the Database Successfully")
     except:
         messagebox.showinfo("Error !","Can't add book into the database\nReasons might include :\n1.Violation of Prescribed Formats\n2.Empty Fields\n3.Duplicate Book Ids")
         runtime=datetime.datetime.now()
+        logfile=open("Program Log.txt", "a+")
         logfile.write("\nDate and Time : {} - Error in Adding the Book to the database".format(runtime))
-    
+        logfile.close()
+        
 def viewmenucall(host,user, passw,db_con):
     print('Information Fetched from database for structured display')
     runtime=datetime.datetime.now()
+    logfile=open("Program Log.txt", "a+")
     logfile.write("\nDate and Time : {} - View Menu Accessed".format(runtime))
+    logfile.close()
     conn= mysql.connector.connect(host = host, user=user, passwd = passw, database =db_con)
     cur = conn.cursor()
     viewmenu = tk.Toplevel()
@@ -245,7 +260,9 @@ def viewmenucall(host,user, passw,db_con):
 
 def viewbooks(host,user, passw,db_con):
     runtime=datetime.datetime.now()
+    logfile=open("Program Log.txt", "a+")
     logfile.write("\nDate and Time : {} - Displaying Information for All Books".format(runtime))
+    logfile.close()
     print('Displaying Book Information')
     con= mysql.connector.connect(host = host, user=user, passwd = passw, database =db_con)
     cur = con.cursor()
@@ -301,7 +318,9 @@ def viewbooks(host,user, passw,db_con):
 
 def viewstats(host,user, passw,db_con): 
     runtime=datetime.datetime.now()
+    logfile=open("Program Log.txt", "a+")
     logfile.write("\nDate and Time : {} - Displaying Stats".format(runtime))
+    logfile.close()
     print('Displaying Statistical Information')
     con= mysql.connector.connect(host = host, user=user, passwd = passw, database =db_con)
     cur = con.cursor()
@@ -349,7 +368,9 @@ def viewstats(host,user, passw,db_con):
 
 def viewtrans(host,user, passw,db_con): 
     runtime=datetime.datetime.now()
+    logfile=open("Program Log.txt", "a+")
     logfile.write("\nDate and Time : {} - Displaying Transactions".format(runtime)) 
+    logfile.close()
     print('Displaying Transactional Information')
     con= mysql.connector.connect(host = host, user=user, passwd = passw, database =db_con)
     cur = con.cursor()
@@ -443,7 +464,9 @@ def transbymem(host,user, passw,db_con):
         detBtn.destroy()
         name=mem.get()
         runtime=datetime.datetime.now()
+        logfile=open("Program Log.txt", "a+")
         logfile.write("\nDate and Time : {} - Displaying Details for the User : {}".format(runtime,name))
+        logfile.close()
         con= mysql.connector.connect(host = host, user=user, passwd = passw, database =db_con)
         cur = con.cursor()
         cur.execute('select * from transaction_info where issued_to = "{}"'.format(name))
@@ -508,8 +531,10 @@ def infobybook(host,user, passw,db_con):
     def infobybookuidet(host,user, passw,db_con):
         detBtn.destroy()
         bookid=idb.get()
+        logfile=open("Program Log.txt", "a+")
         runtime=datetime.datetime.now()
         logfile.write("\nDate and Time : {} - Displaying Information for Book {}".format(runtime,bookid))
+        logfile.close()
         con= mysql.connector.connect(host = host, user=user, passwd = passw, database =db_con)
         cur = con.cursor()
         cur.execute('select * from book_info where book_id = "{}"'.format(bookid))
@@ -538,7 +563,9 @@ def infobybook(host,user, passw,db_con):
 
 def issuebookcall(host,user, passw,db_con):
     runtime=datetime.datetime.now()
+    logfile=open("Program Log.txt", "a+")
     logfile.write("\nDate and Time : {} - Issue Book Window Opened".format(runtime)) 
+    logfile.close()
     con= mysql.connector.connect(host = host, user=user, passwd = passw, database =db_con)
     cur = con.cursor()
     issuebookui=tk.Toplevel()
@@ -597,7 +624,9 @@ def issuebookcall(host,user, passw,db_con):
 
 def issuebook(host,user, passw,db_con,bookid,issued_to):
     runtime=datetime.datetime.now()
+    logfile=open("Program Log.txt", "a+")
     logfile.write("\nDate and Time : {} - Issuing Book {} to {} ".format(runtime,bookid,issued_to))
+    logfile.close()
     print('Issuing Book {} to {} '.format(bookid,issued_to))
     datetimeinput=datetime.date.today()
     con= mysql.connector.connect(host = host, user=user, passwd = passw, database =db_con)
@@ -610,7 +639,9 @@ def issuebook(host,user, passw,db_con,bookid,issued_to):
 
 def delbookcall(host,user, passw,db_con):    
     runtime=datetime.datetime.now()
+    logfile=open("Program Log.txt", "a+")
     logfile.write("\nDate and Time : {} - Delete Book Window Opened".format(runtime))    
+    logfile.close()
     delbookui = tk.Toplevel()
     delbookui.title("Reader's Club - Delete Book Information from the Database")
     delbookui.minsize(width=400,height=400)
@@ -662,8 +693,10 @@ def delbookcall(host,user, passw,db_con):
 
 def delbook(host,user, passw,db_con,bookid):
     print('Deleting Book {} from the database'.format(bookid))
+    logfile=open("Program Log.txt", "a+")
     runtime=datetime.datetime.now()
     logfile.write("\nDate and Time : {} - Deleting Book {} from the database ".format(runtime,bookid))
+    logfile.close()
     con= mysql.connector.connect(host = host, user=user, passwd = passw, database =db_con)
     cur = con.cursor()
     cur.execute("delete from book_info where book_id='{}'".format(bookid))
@@ -675,7 +708,9 @@ def delbook(host,user, passw,db_con,bookid):
 
 def retbookcall(host,user, passw,db_con):     
     runtime=datetime.datetime.now()
+    logfile=open("Program Log.txt", "a+")
     logfile.write("\nDate and Time : {} - Return Book Window Accessed".format(runtime))
+    logfile.close()
     retbookui = tk.Toplevel()
     retbookui.title("Reader's Club - Record a Return")
     retbookui.state=("zoomed")
@@ -727,8 +762,10 @@ def retbookcall(host,user, passw,db_con):
 
 def retbook(host,user, passw,db_con,bookid):
     runtime=datetime.datetime.now()
+    logfile=open("Program Log.txt", "a+")
     logfile.write("\nDate and Time : {} - Book {} Returned ".format(runtime,bookid))
     print('Recording a Return')
+    logfile.close()
     con= mysql.connector.connect(host = host, user=user, passwd = passw, database =db_con)
     cur = con.cursor()
     datetimeinput=datetime.date.today()
@@ -746,6 +783,7 @@ def retbook(host,user, passw,db_con,bookid):
             cur.execute("update transaction_info set fine={} where book_id='{}' and date_returned='Not Returned' ".format(fine,bookid))
             finefile=open("Fine History.txt", "a+")
             finefile.write("\nName of Violator : {} Book Id : {} Days Kept : {} Fine : {} Payment Id : By Cash".format(violator,bookid,daysdiff,fine))
+            finefile.close()
             runtime=datetime.datetime.now()
             logfile.write("\n\nDate and Time : {} - Fine Imposed on {} for Late Return".format(runtime,violator))
             messagebox.showinfo('Fine to be Paid',"Fine of Rs. {} is to be paid for the violation of Return Rules. The Challan Document has been saved to your folder.".format(fine))
